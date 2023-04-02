@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import s from './ImageGallery.module.css';
@@ -5,7 +6,9 @@ import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import Button from '../Button/Button';
 import {GalleryLoader } from '../Loader/Loader';
 import { fetchQuery } from '../Api/Api';
-import { onErrorToast } from '../ErorrTost/ErorrTost';
+import { onErrorToast} from '../ErorrTost/ErorrTost';
+import { onErrorToastNoMore} from '../ErorrTost/ErorrTost';
+
 
 const Status = {
   IDLE: 'idle',
@@ -20,6 +23,7 @@ class ImageGallery extends Component {
     error: null,
     status: Status.IDLE,
     page: 1,
+    hasMore: true
   }
 
   onLoadMoreBtn = (e) => {
@@ -36,18 +40,21 @@ class ImageGallery extends Component {
     const { page } = this.state;
     fetchQuery(searchQuery, page)
       .then((queries) => {
-        if (queries.hits.lenght === 0) {
-          onErrorToast()
+        if (queries.hits.length === 0) {
+          this.setState({ hasMore: false }, () => {
+            onErrorToast();
+          });
+        } else {
+          this.setState((prevState) => ({
+            queries: [...prevState.queries, ...queries.hits],
+            page: this.state.page + 1,
+            status: Status.RESOLVED,
+          }));
         }
-
-        return this.setState((prevState) => ({
-          queries: [...prevState.queries, ...queries.hits],
-          page: this.state.page + 1,
-          status: Status.RESOLVED,
-        }))
       })
       .catch(error => this.setState({ error, status: Status.REJECTED }))
   }
+
   scrollPageToEnd = () => {
     setTimeout(() => {
       window.scrollBy({
@@ -62,7 +69,7 @@ class ImageGallery extends Component {
     const nextQue = this.props.queriesName;
 
     if (prevQue !== nextQue) {
-      this.setState({ status: Status.PENDING, page: 1, queries: [] })
+      this.setState({ status: Status.PENDING, page: 1, queries: [], hasMore: true })
       setTimeout(() => {
         this.onFetchQuery()
       }, 500);
@@ -70,7 +77,7 @@ class ImageGallery extends Component {
   }
 
   render() {
-    const { queries, error, status } = this.state
+    const { queries, error, status, hasMore } = this.state
 
     if (status === Status.IDLE) {
       return (
@@ -105,7 +112,11 @@ class ImageGallery extends Component {
               />
             ))}
           </ul>
-          {queries.length > 0 && (
+          {!hasMore && (
+          onErrorToastNoMore()
+            )}
+
+          {hasMore && (
             <Button onClick={this.onLoadMoreBtn} aria-label="add" />
           )}
         </>
@@ -121,3 +132,6 @@ ImageGallery.propTypes = {
 }
 
 export default ImageGallery;
+
+
+

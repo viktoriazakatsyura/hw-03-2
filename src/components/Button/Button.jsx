@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 export default function Button ({onClick, ...allyProps}){
     return(
         <button type='submit' className={s.Button} onClick={onClick} {...allyProps}>
-            <span>Loading...</span>
+            <span>More...</span>
         </button>
     )
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 import { ModalLoader } from './components/Loader/Loader';
 import PropTypes from 'prop-types'
 import Searchbar from './components/SeacrhBar/Searchbar';
@@ -27,7 +28,7 @@ class App extends Component{
 
 
   handleImageClick=(largeImageURL, imgTags)=>{
-    this.setState({largeImageURL, imgTags, loader: false})
+    this.setState({largeImageURL, imgTags, loader: true})
     this.toggleModal()
   }
 
