@@ -1,8 +1,8 @@
 {
-  "name": "react-homework-template",
+  "name": "goit-react-hw-04-images",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://viktoriazakatsyura.github.io/hw-03-2/",
+  "homepage": "https://viktoriazakatsyura.github.io/goit-react-hw-04-images/",
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
